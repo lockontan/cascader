@@ -1,53 +1,24 @@
 <template>
-  <!-- <div v-click-outside="test" id="11">
-    <Checkbox v-model="value">Checkbox</Checkbox>
-  </div>   -->
-  <div class="cascader-wrap" v-click-outside="handleClose" style="width: 120px">
-    <div class="cascader-text" @click="handleShow">
-      测试
-    </div>
-    <div class="cascader-drop" v-show="visible">
-      <Panel :data="[{children: []}]"></Panel>
-    </div>
-  </div>
+  <Cascader :data="data"></Cascader>
 </template>
 
 <script>
-  import clickoutside from './components/clickoutside'
-  import Checkbox from './components/Checkbox'
-  import Panel from './components/panel'
+  import Cascader from './components/Index'
+  import data from './data'
   export default {
     components: {
-      Checkbox,
-      Panel
-    },
-
-    watch: {
-      // value (value) {
-      //   console.log(value)
-      // }
+      Cascader
     },
 
     data () {
       return {
-        // value: true,
-        visible: true
+        data: data
       }
     },
 
-    methods: {
-      handleShow () {
-        this.visible = true
-      },
+    created () {},
 
-      handleClose () {
-        this.visible = false
-      }
-    },
-
-    directives: {
-      'click-outside': clickoutside
-    }
+    methods: {}
   }
 </script>
 

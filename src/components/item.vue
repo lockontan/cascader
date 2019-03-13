@@ -1,6 +1,8 @@
 <template>
   <li class="cascader-item">
-    <Checkbox></Checkbox>深圳
+    <Checkbox
+      v-model="data._checked">
+    </Checkbox>{{data.label}}
   </li>
 </template>
 
@@ -10,6 +12,12 @@
     components: {
       Checkbox
     },
+
+    props: {
+      data: {
+        type: Object
+      }
+    }
   }
 </script>
 

@@ -1,13 +1,14 @@
 <template>
   <span>
     <ul class="cascader-panel">
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
-      <Item></Item>
+      <Item
+        v-for="(item, index) in data" 
+        :key="index"
+        :data="item"
+        @click.native="handleClickItem(item, index)">
+      </Item>
     </ul>
-    <Panel v-if="data.length" :data="newData"></Panel>
+    <Panel v-if="clickItemChildData.length" :data="clickItemChildData"></Panel>
   </span>
 </template>
 
@@ -29,10 +30,26 @@ export default {
     }
   },
 
-  created () {
-    if (this.data[0]) {
-      this.newData = this.data[0].children
-      console.log(this.newData)
+  watch: {
+    data () {
+      this.clickItemChildData = []
+    }
+  },
+
+  data () {
+    return {
+      clickItemData: {},
+      clickItemChildData: []
+    }
+  },
+
+  created () {},
+
+  methods: {
+    handleClickItem (item, index) {
+      console.log(item)
+      this.clickItemData = item
+      this.clickItemChildData = item.children
     }
   }
 }
