@@ -4,12 +4,13 @@
       测试
     </div>
     <div class="cascader-drop" v-show="visible">
-      <Panel :data="newData"></Panel>
+      <Panel :data="newData" @on-select="select"></Panel>
     </div>
   </div>
 </template>
 
 <script>
+  import { checked } from './keys'
   import clickoutside from './clickoutside'
   import Panel from './panel'
   export default {
@@ -45,13 +46,18 @@
 
       format (arr) {
         return arr.map(item => {
-          return {
+          let obj =  {
             value: item.value,
             label: item.label,
-            children: item.children && item.children.length ? this.format(item.children) : [],
-            _checked: false
+            children: item.children && item.children.length ? this.format(item.children) : []
           }
+          obj[checked] = false
+          return obj
         })
+      },
+
+      select (value) {
+        console.log(this.newData)
       }
     },
 

@@ -1,5 +1,5 @@
 <template>
-  <label class="checkbox-wrap">
+  <label class="checkbox-wrap" @click.stop.prevent="click">
     <span :class="{checkbox: true, 'checkbox-checked': newValue, 'checkbox-disabled': disabled}">
       <span class="checkbox-icon"></span>
       <input v-model="newValue" :disabled="disabled" class="checkbox-input" type="checkbox">
@@ -25,10 +25,6 @@
     watch: {
       value (value) {
         this.newValue = value
-      },
-
-      newValue (value) {
-        this.$emit('input', value)
       }
     },
 
@@ -38,7 +34,13 @@
       }
     },
     
-    methods: {}
+    methods: {
+      click () {
+        this.newValue = !this.newValue
+        this.$emit('input', this.newValue)
+        this.$emit('on-change', this.newValue)
+      }
+    }
   }
 </script>
 

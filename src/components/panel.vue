@@ -3,16 +3,19 @@
     <ul class="cascader-panel">
       <Item
         v-for="(item, index) in data" 
-        :key="index"
+        :key="item.value"
         :data="item"
-        @click.native="handleClickItem(item, index)">
+        :active="activeIndex === index"
+        @on-select="selectItem($event, item, index)"
+        @click.native.stop.prevent="handleClickItem(item, index)">
       </Item>
     </ul>
-    <Panel v-if="clickItemChildData.length" :data="clickItemChildData"></Panel>
+    <Panel v-if="clickItemChildren.length" @on-select="selectItemChildren" :data="clickItemChildren"></Panel>
   </span>
 </template>
 
 <script>
+import { checked } from './keys'
 import Item from './item'
 export default {
   name: 'Panel',
@@ -31,15 +34,16 @@ export default {
   },
 
   watch: {
-    data () {
-      this.clickItemChildData = []
+    data (value) {
+      this.clickItemChildren = []
     }
   },
 
   data () {
     return {
-      clickItemData: {},
-      clickItemChildData: []
+      clickItem: {},
+      clickItemChildren: [],
+      activeIndex: null
     }
   },
 
@@ -47,9 +51,43 @@ export default {
 
   methods: {
     handleClickItem (item, index) {
-      console.log(item)
-      this.clickItemData = item
-      this.clickItemChildData = item.children
+      this.clickItemChildren = item.children
+      this.clickItem = item
+      this.activeIndex = index
+    },
+
+    selectItem (value, item, index) {
+      this.clickItem = item
+      this.clickItemChildren = item.children
+      this.setChildrenChecked(item.children, value)
+      this.activeIndex = index
+      this.$emit('on-select')
+    },
+
+    selectItemChildren (value) {
+      if (this.clickItem.children.some(item => item[checked])) {
+        this.clickItem[checked] = true
+      } else {
+        this.clickItem[checked] = false
+      }
+      this.$emit('on-select')
+    },
+
+    setChildrenChecked (arr, value) {
+      arr.forEach(item => {
+        item[checked] = value
+        if (item.children.length) {
+          this.setChildrenChecked1(item.children, value)
+        }
+      })
+    },
+
+    setChildrenChecked1 (arr, value) {
+      return arr.map(item => {
+        item[checked] = value
+        item.children = item.children && item.children.length ? this.setChildrenChecked(item.children, value) : []
+        return item
+      })
     }
   }
 }

@@ -1,12 +1,14 @@
 <template>
-  <li class="cascader-item">
+  <li :class="{'cascader-item': true, 'cascader-item-active': active}">
     <Checkbox
-      v-model="data._checked">
+      @on-change="change"
+      v-model="data[checked]">
     </Checkbox>{{data.label}}
   </li>
 </template>
 
 <script>
+  import { checked } from './keys'
   import Checkbox from './Checkbox'
   export default {
     components: {
@@ -16,6 +18,25 @@
     props: {
       data: {
         type: Object
+      },
+
+      active: {
+        type: Boolean,
+        default () {
+          return false
+        }
+      }
+    },
+
+    data () {
+      return {
+        checked: checked
+      }
+    },
+
+    methods: {
+      change (value) {
+        this.$emit('on-select', value)
       }
     }
   }
@@ -30,8 +51,12 @@
     font-size: 12px;
   }
 
+  .cascader-item-active {
+    background-color: #eeeeee
+  }
+
   .cascader-item:hover {
-    background: #eeeeee
+    background-color: #eeeeee
   }
   
   .cascader-item-label {
